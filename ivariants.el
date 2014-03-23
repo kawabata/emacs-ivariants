@@ -57,7 +57,9 @@ Lists are ordered according to `ivariants-order'."
   (let ((ivariants (ivariants-char char)))
     (when ivariants
       (concat "《"
-              (mapconcat (lambda (x) (apply 'string x))
+              (mapconcat (lambda (x)
+                           (apply 'concat
+                                  (mapcar (lambda (y) (if (characterp y) (list y) y)) x)))
                          ivariants "/")
               "》"))))
 
