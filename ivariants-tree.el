@@ -15,7 +15,7 @@
 (require 'cl-lib)
 
 (defun ivariants-tree-expander (widget)
-  "WIDGETの子となる木のリストを返す."
+  "Return the list of tree as a child of WIDGET."
   (when (characterp (widget-get widget :char))
     (let* ((char      (widget-get widget :char))
            (ancestors (cons char (widget-get widget :ancestors))) ;; ancestors
@@ -78,13 +78,13 @@
      (list (string-to-char
             (read-string "Char? : " (if (and mnemonics (string-match "C" mnemonics))
                                         (char-to-string char)))))))
-  (switch-to-buffer "*異体字検索*")
+  (switch-to-buffer "*Search IVariants*")
   (kill-all-local-variables)
   (let ((inhibit-read-only t))
     (erase-buffer))
   (let ((all (overlay-lists)))
     (mapcar #'delete-overlay (car all)))
-  (widget-insert "【異体字検索】\n\n")
+  (widget-insert "【IVariants】\n\n")
   (widget-create 'tree-widget
                  :tag (format "%c (%04X)" char char)
                  :char char
@@ -95,7 +95,7 @@
   (widget-insert "\n")
   ;; Insert the Close button
   (widget-create 'push-button
-                 :keymap tree-widget-button-keymap ; Emacs
+                 :keymap tree-widget-button-keymap
                  :notify 'ivariants-tree-close
                  "Close")
   (use-local-map widget-keymap)

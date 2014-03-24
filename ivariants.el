@@ -30,17 +30,19 @@
 (require 'cl-lib)
 
 (defvar ivariants-order
-  '(proper traditional simplified duplicate variant non-cognate japanese tiwanese compat ivs borrowed)
+  '(proper traditional "," simplified ":" variant-simplified
+           pseudo-simplified "|" variant)
   "Order to list in \\[ivariants].")
 
 ;; calculation
 
-(defun ivariants-by-category (char regexp)
-  "Get all CHAR variants of category REGEXP."
+(defun ivariants-by-category (char category-str)
+  "Get all CHAR variants of CATEGORY-STR."
   (let ((alist (aref ivariants-table char))
         result)
     (dolist (item alist)
       (let ((prop (symbol-name (car item)))
+            (regexp (concat "/" category-str))
             (chars (cdr item)))
         (if (string-match regexp prop)
             (if (listp chars)
@@ -48,39 +50,42 @@
               (setq result (append result (list chars)))))))
     (cl-remove-duplicates result :test 'equal)))
 
+(defun ivariants-by-category-string (char category)
+  "Categorize CHAR variants by symbol CATEGORY.
+Returned value is a list of string."
+  (mapcar
+   (lambda (char)
+     (if (characterp char) (char-to-string char) char))
+   (ivariants-by-category char (symbol-name category))))
+
 ;; e.g. (ivariants-by-category ?一 "variant")
 
-(defun ivariants-char (char)
+(defun ivariants-char-string (char)
   "Collect all uniqe variants of CHAR.
 Lists are ordered according to `ivariants-order'."
-  (let ((chars)
-        (result))
-    (dolist (category (append ivariants-order '(.)))
-      (let* ((variants (ivariants-by-category char (symbol-name category))))
-        (setq variants (cl-set-difference variants chars))
-        (when variants
-          (setq chars (cl-union variants chars))
-          (message "chars=%s" chars)
-          (setq result (append result (list variants))))))
-    result))
-
-(defun ivariants-short-string (char)
-  "Short string expression of variants of CHAR."
-  (let ((ivariants (ivariants-char char)))
-    (when ivariants
-      (concat "《"
-              (mapconcat (lambda (x)
-                           (apply 'concat
-                                  (mapcar (lambda (y) (if (characterp y) (list y) y)) x)))
-                         ivariants "/")
-              "》"))))
+  (let ((variants-all)
+        (variants-group))
+    (mapconcat
+     (lambda (category)
+       (if (stringp category)
+           (when variants-group
+             (setq variants-group nil)
+             category)
+         (let* ((variants (ivariants-by-category-string char category)))
+           (setq variants
+                 (cl-set-difference variants variants-all :test 'equal))
+           (when variants
+             (setq variants-all (cl-union variants variants-all :test 'equal))
+             (setq variants-group (cl-union variants variants-group :test 'equal)))
+           (apply 'concat variants))))
+     ivariants-order "")))
 
 ;;;###autoload
 (defun ivariants-insert ()
   "Insert variants short string form after point."
   (interactive)
-  (let ((string (ivariants-short-string (char-after (point)))))
-    (if string (insert string)
+  (let ((string (ivariants-char-string (char-after (point)))))
+    (if string (insert "《" string "》")
       (message "No varinats found!"))))
 
 (provide 'ivariants)

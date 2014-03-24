@@ -31,7 +31,8 @@
       "jisx0213-variants.txt"
       "joyo-variants.txt"
       "jp-borrowed.txt"
-      "koseki.txt"
+      "koseki-variants.txt"
+      "x0212-x0213-variants.txt"
       ;; misc
       "cjkvi-variants.txt"
       "duplicate-chars.txt"
