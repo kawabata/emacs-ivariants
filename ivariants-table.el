@@ -14,6 +14,9 @@
 ;; Note: functions defined only at byte-compile-time may not have
 ;; proper namespace.
 
+(declare-function ivariants-add-charstr "ivariants-table" (charstr prop valstr))
+(declare-function ivariants-parse-files "ivariants-table" ())
+
 (eval-when-compile
   (defvar ivariants-files nil)
   (setq ivariants-files
@@ -30,7 +33,7 @@
       "jp-borrowed.txt"
       "koseki.txt"
       ;; misc
-      ;; "cjkvi-variants.txt"
+      "cjkvi-variants.txt"
       "duplicate-chars.txt"
       "non-cjk.txt"
       "non-cognates.txt"

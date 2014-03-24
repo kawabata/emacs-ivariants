@@ -16,36 +16,37 @@
 
 (defun ivariants-tree-expander (widget)
   "WIDGETの子となる木のリストを返す."
-  (let* ((char      (widget-get widget :char))
-         (ancestors (cons char (widget-get widget :ancestors))) ;; ancestors
-         (node-aj1  (ivariants-tree-ivs
-                     char 'Adobe-Japan1))
-         (node-hd   (ivariants-tree-ivs
-                     char 'Hanyo-Denshi))
-         (alist     (get-char-code-property char 'ivariants))
-         (ivariants)
-         (nodes))
-    (dolist (item alist)
-      (setq ivariants (append (cdr item) ivariants)))
-    (if node-aj1 (push node-aj1 nodes))
-    (if node-hd  (push node-hd nodes))
-    (dolist (item alist)
-      (let ((attribute (car item))
-            (variants (cdr item)))
-        (dolist (variant variants)
-          (when (not (memq variant ancestors))
-            (push
-             (list 'tree-widget
-                   :tag (format "%s %s"
-                                (if (characterp variant) (char-to-string variant)
-                                  variant)
-                                (or (gethash attribute ivariants-name-table)
-                                    (symbol-name attribute)))
-                   :char variant
-                   :open nil :ancestors (cl-union ancestors ivariants)
-                   :expander 'ivariants-tree-expander)
-             nodes)))))
-    (nreverse nodes)))
+  (when (characterp (widget-get widget :char))
+    (let* ((char      (widget-get widget :char))
+           (ancestors (cons char (widget-get widget :ancestors))) ;; ancestors
+           (node-aj1  (ivariants-tree-ivs
+                       char 'Adobe-Japan1))
+           (node-hd   (ivariants-tree-ivs
+                       char 'Hanyo-Denshi))
+           (alist     (get-char-code-property char 'ivariants))
+           (ivariants)
+           (nodes))
+      (dolist (item alist)
+        (setq ivariants (append (cdr item) ivariants)))
+      (if node-aj1 (push node-aj1 nodes))
+      (if node-hd  (push node-hd nodes))
+      (dolist (item alist)
+        (let ((attribute (car item))
+              (variants (cdr item)))
+          (dolist (variant variants)
+            (when (not (memq variant ancestors))
+              (push
+               (list 'tree-widget
+                     :tag (format "%s %s"
+                                  (if (characterp variant) (char-to-string variant)
+                                    variant)
+                                  (or (gethash attribute ivariants-name-table)
+                                      (symbol-name attribute)))
+                     :char variant
+                     :open nil :ancestors (cl-union ancestors ivariants :test 'equal)
+                     :expander 'ivariants-tree-expander)
+               nodes)))))
+      (nreverse nodes))))
 
 (defun ivariants-tree-ivs (char ivd)
   "Return the widget node of CHAR with IVD."
