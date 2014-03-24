@@ -12,6 +12,18 @@
 
 ;;; Commentary:
 
+;; * ivariants.el … Ideographic Variants Integrated Editor
+;;
+;; ivariants.el provides various Ideographic Variants editing tools.
+;; It provides various variation tables.
+;;
+;; ** Inserting Variants
+;; `M-x ivariants-insert' inserts the variants of the cursor.
+;;
+;; ** ivariants-tree
+;;
+;; `M-x ivariants-tree' provides the tracing variants by tree widget.
+
 ;;; Code:
 
 (require 'ivariants-table)
@@ -67,7 +79,9 @@ Lists are ordered according to `ivariants-order'."
 (defun ivariants-insert ()
   "Insert variants short string form after point."
   (interactive)
-  (insert (ivariants-short-string (char-after (point)))))
+  (let ((string (ivariants-short-string (char-after (point)))))
+    (if string (insert string)
+      (message "No varinats found!"))))
 
 (provide 'ivariants)
 
