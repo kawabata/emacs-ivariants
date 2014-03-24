@@ -30,8 +30,8 @@
 (require 'cl-lib)
 
 (defvar ivariants-order
-  '(proper traditional "," simplified ":" variant-simplified
-           pseudo-simplified "|" variant)
+  '(proper traditional "," simplified ":" variant-simplified pseudo-simplified "|"
+    variant "￤")
   "Order to list in \\[ivariants].")
 
 ;; calculation
@@ -44,6 +44,7 @@
       (let ((prop (symbol-name (car item)))
             (regexp (concat "/" category-str))
             (chars (cdr item)))
+        (message "regexp=%s" regexp)
         (if (string-match regexp prop)
             (if (listp chars)
                 (setq result (append result chars))
@@ -78,7 +79,7 @@ Lists are ordered according to `ivariants-order'."
              (setq variants-all (cl-union variants variants-all :test 'equal))
              (setq variants-group (cl-union variants variants-group :test 'equal)))
            (apply 'concat variants))))
-     ivariants-order "")))
+     (append ivariants-order '(\.)) "")))
 
 ;;;###autoload
 (defun ivariants-insert ()
