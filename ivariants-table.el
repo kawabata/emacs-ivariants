@@ -14,6 +14,11 @@
 ;; Note: functions defined only at byte-compile-time may not have
 ;; proper namespace.
 
+(eval-when-compile
+  (when (featurep 'ivariants) (unload-feature 'ivariants))
+  (when (featurep 'ivariants-browse) (unload-feature 'ivariants-browse))
+  (when (featurep 'ivariants-table) (unload-feature 'ivariants-table)))
+
 (declare-function ivariants-add-charstr "ivariants-table" (charstr prop valstr))
 (declare-function ivariants-parse-files "ivariants-table" ())
 

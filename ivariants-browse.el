@@ -1,11 +1,11 @@
-;;; ivariants-tree.el --- Ideographic Variants Tree viewer  -*- lexical-binding: t -*-
+;;; ivariants-browse.el --- Ideographic Variants Tree viewer  -*- lexical-binding: t -*-
 
 ;; Author: KAWABATA, Taichi <kawabata.taichi_at_gmail.com>
 ;; Description: Ideographic Variants Tree viewer
 ;; Created: 2014-01-01
 ;; Package-Requires: ((emacs "24.3") (ivs-edit "1.0"))
 ;; Keywords: text
-;; Namespace: ivariants-tree-
+;; Namespace: ivariants-browse-
 ;; Human-Keywords: Ideographic Variations
 ;; Version: 1.140316
 ;; URL: http://github.com/kawabata/ivariants
@@ -14,14 +14,14 @@
 (require 'ivs-edit)
 (require 'cl-lib)
 
-(defun ivariants-tree-expander (widget)
+(defun ivariants-browse-expander (widget)
   "Return the list of tree as a child of WIDGET."
   (when (characterp (widget-get widget :char))
     (let* ((char      (widget-get widget :char))
            (ancestors (cons char (widget-get widget :ancestors))) ;; ancestors
-           (node-aj1  (ivariants-tree-ivs
+           (node-aj1  (ivariants-browse-ivs
                        char 'Adobe-Japan1))
-           (node-hd   (ivariants-tree-ivs
+           (node-hd   (ivariants-browse-ivs
                        char 'Hanyo-Denshi))
            (alist     (get-char-code-property char 'ivariants))
            (ivariants)
@@ -44,11 +44,11 @@
                                       (symbol-name attribute)))
                      :char variant
                      :open nil :ancestors (cl-union ancestors ivariants :test 'equal)
-                     :expander 'ivariants-tree-expander)
+                     :expander 'ivariants-browse-expander)
                nodes)))))
       (nreverse nodes))))
 
-(defun ivariants-tree-ivs (char ivd)
+(defun ivariants-browse-ivs (char ivd)
   "Return the widget node of CHAR with IVD."
   (let* ((entries (gethash char ivs-edit-table))
          (entries (cl-remove-if-not (lambda (x) (equal (elt x 1) ivd)) entries))
@@ -71,7 +71,7 @@
          (symbol-name x)))
    list "・"))
 
-(defun ivariants-tree (&optional char)
+(defun ivariants-browse (&optional char)
   (interactive
    (let* ((char (char-after (point)))
           (mnemonics (and char (category-set-mnemonics (char-category-set char)))))
@@ -90,13 +90,13 @@
                  :char char
                  :ancestors nil
                  :open nil ; t
-                 :expander 'ivariants-tree-expander
+                 :expander 'ivariants-browse-expander
                  :has-children t)
   (widget-insert "\n")
   ;; Insert the Close button
   (widget-create 'push-button
                  :keymap tree-widget-button-keymap
-                 :notify 'ivariants-tree-close
+                 :notify 'ivariants-browse-close
                  "Close")
   (use-local-map widget-keymap)
   (widget-setup)
@@ -104,10 +104,16 @@
   (goto-char (point-min))
   (widget-forward 1))
 
-(defun ivariants-tree-close (&rest ignore)
+(defun ivariants-browse-close (&rest ignore)
   "Close the current dialog.
 IGNORE arguments."
   (interactive)
   (kill-buffer (current-buffer)))
 
-(provide 'ivariants-tree)
+(provide 'ivariants-browse)
+
+;; Local Variables:
+;; time-stamp-pattern: "10/Version:\\\\?[ \t]+1.%02y%02m%02d\\\\?\n"
+;; End:
+
+;;; ivariants-browse.el ends here

@@ -7,7 +7,7 @@
 ;; Keywords: text
 ;; Namespace: ivariants-
 ;; Human-Keywords: Ideographic Variations
-;; Version: 1.140324
+;; Version: 1.140327
 ;; URL: http://github.com/kawabata/ivariants
 
 ;;; Commentary:
@@ -30,9 +30,11 @@
 (require 'cl-lib)
 
 (defvar ivariants-order
-  '(proper traditional "," simplified ":" variant-simplified pseudo-simplified "|"
-    variant "￤")
-  "Order to list in \\[ivariants].")
+  '(proper "ᴾ" traditional "ᵀ" simplified "ˢ" variant-simplified "ⱽ" pseudo-simplified "P"
+    duplicate "ᴰ" non-cognate "☠" variant "￤" borrowed "ᵇ" kangxi "ᴷ" radical "ᴿ" \.)
+"Order to list in \\[ivariants-insert].
+String is a separator if previous kind of variants are displayed.
+\"\\.\" is a wildcard for the rest of all variants.")
 
 ;; calculation
 
@@ -44,7 +46,6 @@
       (let ((prop (symbol-name (car item)))
             (regexp (concat "/" category-str))
             (chars (cdr item)))
-        (message "regexp=%s" regexp)
         (if (string-match regexp prop)
             (if (listp chars)
                 (setq result (append result chars))
@@ -58,8 +59,6 @@ Returned value is a list of string."
    (lambda (char)
      (if (characterp char) (char-to-string char) char))
    (ivariants-by-category char (symbol-name category))))
-
-;; e.g. (ivariants-by-category ?一 "variant")
 
 (defun ivariants-char-string (char)
   "Collect all uniqe variants of CHAR.
@@ -79,7 +78,7 @@ Lists are ordered according to `ivariants-order'."
              (setq variants-all (cl-union variants variants-all :test 'equal))
              (setq variants-group (cl-union variants variants-group :test 'equal)))
            (apply 'concat variants))))
-     (append ivariants-order '(\.)) "")))
+     ivariants-order "")))
 
 ;;;###autoload
 (defun ivariants-insert ()
