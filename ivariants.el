@@ -7,7 +7,7 @@
 ;; Keywords: text
 ;; Namespace: ivariants-
 ;; Human-Keywords: Ideographic Variations
-;; Version: 1.140327
+;; Version: 1.140328
 ;; URL: http://github.com/kawabata/ivariants
 
 ;;; Commentary:
@@ -18,11 +18,11 @@
 ;; It provides various variation tables.
 ;;
 ;; ** Inserting Variants
-;; `M-x ivariants-insert' inserts the variants of the cursor.
+;; `M-x ivariants-insert' inserts the variants of ideograph at position.
 ;;
-;; ** ivariants-tree
+;; ** ivariants-browse
 ;;
-;; `M-x ivariants-tree' provides the tracing variants by tree widget.
+;; `M-x ivariants-browse' provides the tracing variants by tree widget.
 
 ;;; Code:
 
