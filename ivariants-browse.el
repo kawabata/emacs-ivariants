@@ -1,14 +1,17 @@
-;;; ivariants-browse.el --- Ideographic Variants Tree viewer  -*- lexical-binding: t -*-
+;;; ivariants-browse.el --- Ideographic Variants Browser  -*- lexical-binding: t -*-
 
+;; Filename: ivariants-browse.el
+;; Description: Ideographic Variants Browser
 ;; Author: KAWABATA, Taichi <kawabata.taichi_at_gmail.com>
-;; Description: Ideographic Variants Tree viewer
 ;; Created: 2014-01-01
 ;; Package-Requires: ((emacs "24.3") (ivs-edit "1.0"))
-;; Keywords: text
+;; Version: 1.140329
+;; Keywords: i18n languages
 ;; Namespace: ivariants-browse-
-;; Human-Keywords: Ideographic Variations
-;; Version: 1.140316
+;; Human-Keywords: Ideographic Variants
 ;; URL: http://github.com/kawabata/ivariants
+
+;;; Code:
 
 (require 'ivariants-table)
 (require 'ivs-edit)
@@ -64,13 +67,7 @@
                     :open nil
                     ,@(nreverse children)))))
 
-(defun ivariants-to-names (list)
-  (mapconcat
-   (lambda (x)
-     (or (assoc-default x ivariants-name)
-         (symbol-name x)))
-   list "・"))
-
+;;;###autoload
 (defun ivariants-browse (&optional char)
   (interactive
    (let* ((char (char-after (point)))
@@ -83,7 +80,7 @@
   (let ((inhibit-read-only t))
     (erase-buffer))
   (let ((all (overlay-lists)))
-    (mapcar #'delete-overlay (car all)))
+    (mapc #'delete-overlay (car all)))
   (widget-insert "【IVariants】\n\n")
   (widget-create 'tree-widget
                  :tag (format "%c (%04X)" char char)
@@ -104,7 +101,7 @@
   (goto-char (point-min))
   (widget-forward 1))
 
-(defun ivariants-browse-close (&rest ignore)
+(defun ivariants-browse-close (&rest _ignore)
   "Close the current dialog.
 IGNORE arguments."
   (interactive)

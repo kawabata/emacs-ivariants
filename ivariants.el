@@ -1,13 +1,14 @@
-;;; ivariants.el --- Ideographic Variants editor  -*- lexical-binding: t -*-
+;;; ivariants.el --- Ideographic Variants Editor -*- lexical-binding: t -*-
 
+;; Filename: ivariants.el
+;; Description: Ideographic Variants Editor
 ;; Author: KAWABATA, Taichi <kawabata.taichi_at_gmail.com>
-;; Description: Tools for Editing Ideographic Variants
 ;; Created: 2014-01-01
 ;; Package-Requires: ((emacs "24.3"))
-;; Keywords: text
+;; Version: 1.140329
+;; Keywords: i18n languages
 ;; Namespace: ivariants-
-;; Human-Keywords: Ideographic Variations
-;; Version: 1.140328
+;; Human-Keywords: Ideographic Variants
 ;; URL: http://github.com/kawabata/ivariants
 
 ;;; Commentary:
@@ -23,6 +24,10 @@
 ;; ** ivariants-browse
 ;;
 ;; `M-x ivariants-browse' provides the tracing variants by tree widget.
+;;
+;; * Variants data
+;; Data are from http://github.com/cjkvi/variants and
+;; http://unicode.org/Public/UCD/latest/ucd/StandardizedVariants.txt
 
 ;;; Code:
 
@@ -30,9 +35,10 @@
 (require 'cl-lib)
 
 (defvar ivariants-order
-  '(proper "ᴾ" traditional "ᵀ" simplified "ˢ" variant-simplified "ⱽ" pseudo-simplified "P"
-    duplicate "ᴰ" non-cognate "☠" variant "￤" borrowed "ᵇ" kangxi "ᴷ" radical "ᴿ" \.)
-"Order to list in \\[ivariants-insert].
+  '(proper "ᴾ" traditional "ᵀ" simplified "ˢ" variant-simplified "ⱽ"
+    pseudo-simplified "Ⓟ" duplicate "ᴰ" compatibility "ᶜ"
+    non-cognate "☠" variant "|" borrowed "ᵇ" kangxi "ᴷ" radical "ᴿ" \.)
+  "Order to list in \\[ivariants-insert].
 String is a separator if previous kind of variants are displayed.
 \"\\.\" is a wildcard for the rest of all variants.")
 

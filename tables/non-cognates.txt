@@ -1,6 +1,6 @@
 # Copyright (c) 2014 CJKVI Database
 cjkvi/non-cognate,<rev>,cjkvi/non-cognate
-cjkvi/non-cognate,<name>,同型異字
+cjkvi/non-cognate,<name>,類型異字
 祖,cjkvi/non-cognate,𥘵
 䀹,cjkvi/non-cognate,䀹
 伵,cjkvi/non-cognate,𠇻

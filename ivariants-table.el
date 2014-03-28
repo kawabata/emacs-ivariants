@@ -1,32 +1,36 @@
-;;; ivariants-table.el --- Math Symbol Input methods and conversion tools -*- lexical-binding: t -*-
+;;; ivariants-table.el --- Ideographic Variants Table -*- lexical-binding: t -*-
 
 ;; Filename: ivariants-table.el
-;; Description: Math Symbol Input methods and conversion tools
+;; Description: Ideographic Variants Table
 ;; Author: KAWABATA, Taichi <kawabata.taichi_at_gmail.com>
 ;; Created: 2013-03-25
 ;; Package-Requires: ((emacs "24.3"))
-;; Version: 1.131017
+;; Version: 1.140329
 ;; Keywords: i18n languages
-;; Human-Keywords: math symbols
+;; Namespace: ivariants-
+;; Human-Keywords: Ideographic Variants
+;; URL: http://github.com/kawabata/ivariants
 
-;; variants.el (Emacs 23 only)
-;;
-;; Note: functions defined only at byte-compile-time may not have
-;; proper namespace.
+;;; Code:
+
+(require 'cl-lib)
 
 (eval-when-compile
-  (when (featurep 'ivariants) (unload-feature 'ivariants))
-  (when (featurep 'ivariants-browse) (unload-feature 'ivariants-browse))
-  (when (featurep 'ivariants-table) (unload-feature 'ivariants-table)))
+  (when (featurep 'ivariants) (unload-feature 'ivariants t))
+  (when (featurep 'ivariants-browse) (unload-feature 'ivariants-browse t))
+  (when (featurep 'ivariants-table) (unload-feature 'ivariants-table t)))
 
 (declare-function ivariants-add-charstr "ivariants-table" (charstr prop valstr))
 (declare-function ivariants-parse-files "ivariants-table" ())
+(declare-function ivariants-parse-standardized-variants  "ivariants-table" ())
+(declare-function ivariants-compat-chars "ivariants-table" ())
 
 (eval-when-compile
-  (defvar ivariants-files nil)
+  (defvar ivariants-files)
   (setq ivariants-files
     '(;; chinese
       "cjkvi-simplified.txt"
+      "dypytz-variants.txt"
       "hydzd-borrowed.txt"
       "hydzd-variants.txt"
       ;; japanese
@@ -44,7 +48,6 @@
       "non-cjk.txt"
       "non-cognates.txt"
       "numeric-variants.txt"
-      "radical-variants.txt"
       "ucs-scs.txt"
       ))
 
@@ -65,20 +68,21 @@
           (setq alist (cons (list prop val) alist))
           (aset ivariants-char-table char alist)))))
 
+  (defvar ivariants-directory
+    (expand-file-name
+     "tables"
+     (file-name-directory (or byte-compile-current-file
+                              load-file-name
+                              buffer-file-name))))
+
   (defun ivariants-parse-files ()
     "Parse variant data files."
     (interactive)
-    (let* ((directory
-            (expand-file-name
-             "tables"
-             (file-name-directory (or byte-compile-current-file
-                                      load-file-name
-                                      buffer-file-name))))
-           (reverse-table (make-hash-table :test 'equal :size 50000)))
+    (let* ((reverse-table (make-hash-table :test 'equal :size 50000)))
       (dolist (i ivariants-files)
         (with-temp-buffer
           (message "Now loading [%s]..." i)
-          (insert-file-contents (expand-file-name i directory))
+          (insert-file-contents (expand-file-name i ivariants-directory))
           (goto-char (point-min))
           (while (re-search-forward "^\\(.+?\\),\\(.+?\\),\\([^,\n]+\\)" nil t)
             (let ((a (match-string 1))
@@ -90,8 +94,42 @@
                     (ivariants-add-charstr a b c)
                     (if rev
                         (ivariants-add-charstr c rev a)))))))))))
+
+  (defun ivariants-parse-standardized-variants ()
+    "Parse StandardizedVariants.txt."
+    (interactive)
+    (puthash 'cjkvi/standard-variants "Standardized Variants" ivariants-attr-name-table)
+    (with-temp-buffer
+      (insert-file-contents (expand-file-name "StandardizedVariants.txt"
+                                              ivariants-directory))
+      (while
+          (re-search-forward
+           "^\\([0-9A-F]+\\) \\([0-9A-F]+\\); CJK COMPATIBILITY IDEOGRAPH-\\([0-9A-F]+\\);"
+           nil t)
+        (let ((char (string-to-number (match-string 1) 16))
+              (vari (string-to-number (match-string 2) 16))
+              (comp (string-to-number (match-string 3) 16)))
+          (ivariants-add-charstr (string comp) 'cjkvi/standard-variants
+                                 (string char vari))))))
+
+  (defun ivariants-compat-chars ()
+    (puthash 'cjkvi/compatibility "互換漢字" ivariants-attr-name-table)
+    (puthash 'cjkvi/unified "統合漢字" ivariants-attr-name-table)
+    (let ((ranges '((?豈 . ?龎)
+                    (?丽 . ?𪘀))))
+      (dolist (range ranges)
+        (cl-do ((char (car range) (1+ char))) ((= char (cdr range)))
+          (let ((unified (car (get-char-code-property char 'decomposition))))
+            (when unified
+              (ivariants-add-charstr
+               (string unified) 'cjkvi/compatibility (string char))
+              (ivariants-add-charstr
+               (string char) 'cjkvi/unified (string unified))))))))
+
   ;; execute
-  (ivariants-parse-files))
+  (ivariants-parse-files)
+  (ivariants-parse-standardized-variants)
+  (ivariants-compat-chars))
 
 (defvar ivariants-name-table
   (eval-when-compile ivariants-attr-name-table))
@@ -105,5 +143,5 @@
 (provide 'ivariants-table)
 
 ;; Local Variables:
-;; time-stamp-pattern: "10/Version:\\\\?[ \t]+2.%02y%02m%02d\\\\?\n"
+;; time-stamp-pattern: "10/Version:\\\\?[ \t]+1.%02y%02m%02d\\\\?\n"
 ;; End:
