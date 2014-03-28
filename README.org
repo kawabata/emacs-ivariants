@@ -6,6 +6,6 @@ It provides various variation tables.
 ** Inserting Variants
 `M-x ivariants-insert' inserts the variants of the cursor.
 
-** ivariants-tree
+** ivariants-browse
 
-`M-x ivariants-tree' provides the tracing variants by tree widget.
+`M-x ivariants-browse' provides the tracing variants by tree widget.
