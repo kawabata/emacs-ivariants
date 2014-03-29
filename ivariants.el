@@ -1,4 +1,4 @@
-;;; ivariants.el --- Ideographic Variants Editor -*- lexical-binding: t -*-
+;;; ivariants.el --- Ideographic Variants Editor and Browser-*- lexical-binding: t -*-
 
 ;; Filename: ivariants.el
 ;; Description: Ideographic Variants Editor
@@ -13,7 +13,7 @@
 
 ;;; Commentary:
 
-;; * ivariants.el … Ideographic Variants Integrated Editor
+;; * ivariants.el … Ideographic Variants Editor and Browser
 ;;
 ;; ivariants.el provides various Ideographic Variants editing tools.
 ;; It provides various variation tables.
@@ -39,7 +39,7 @@
 ;;
 ;; * Variants data
 ;;
-;; Data are from http://github.com/cjkvi/variants and
+;; Data are from Data are taken from https://github.com/cjkvi/cjkvi-variants and
 ;; http://unicode.org/Public/UCD/latest/ucd/StandardizedVariants.txt
 ;; 'DailyUse' is a modified version of data from
 ;; http://kanji.zinbun.kyoto-u.ac.jp/~yasuoka/CJK.html.

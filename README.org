@@ -1,4 +1,4 @@
-* ivariants.el … Ideographic Variants Integrated Editor
+* ivariants.el … Ideographic Variants Editor and Browser
 
 ivariants.el provides various Ideographic Variants editing tools.
 It provides various variation tables.
@@ -20,9 +20,9 @@ Following commands for specified region are prepared.
 - ivariants-to-japan
 - ivariants-to-taiwan
 
-* Variants data
+* Variants Data
 
-Data are taken from http://github.com/cjkvi/variants and
+Data are taken from https://github.com/cjkvi/cjkvi-variants and
 http://unicode.org/Public/UCD/latest/ucd/StandardizedVariants.txt.
 'DailyUse' is a modified version of data from
 http://kanji.zinbun.kyoto-u.ac.jp/~yasuoka/CJK.html.
