@@ -81,7 +81,7 @@
     (erase-buffer))
   (let ((all (overlay-lists)))
     (mapc #'delete-overlay (car all)))
-  (widget-insert "【IVariants】\n\n")
+  (widget-insert "【Ideographic Variants】\n\n")
   (widget-create 'tree-widget
                  :tag (format "%c (%04X)" char char)
                  :char char

@@ -23,6 +23,7 @@
 (declare-function ivariants-add-charstr "ivariants-table" (charstr prop valstr))
 (declare-function ivariants-parse-files "ivariants-table" ())
 (declare-function ivariants-parse-standardized-variants  "ivariants-table" ())
+(declare-function ivariants-parse-dailyuse "ivariants-table" ())
 (declare-function ivariants-compat-chars "ivariants-table" ())
 
 (eval-when-compile
@@ -98,7 +99,8 @@
   (defun ivariants-parse-standardized-variants ()
     "Parse StandardizedVariants.txt."
     (interactive)
-    (puthash 'cjkvi/standard-variants "Standardized Variants" ivariants-attr-name-table)
+    (puthash 'cjkvi/standard-variants "Standardized Variants"
+             ivariants-attr-name-table)
     (with-temp-buffer
       (insert-file-contents (expand-file-name "StandardizedVariants.txt"
                                               ivariants-directory))
@@ -111,6 +113,42 @@
               (comp (string-to-number (match-string 3) 16)))
           (ivariants-add-charstr (string comp) 'cjkvi/standard-variants
                                  (string char vari))))))
+
+  (defun ivariants-parse-dailyuse ()
+    (interactive)
+    (puthash 'dailyuse/japan "常用漢字（日本）" ivariants-attr-name-table)
+    (puthash 'dailyuse/pr-china "一级字表（中国）" ivariants-attr-name-table)
+    (puthash 'dailyuse/taiwan "常用國字（臺灣）" ivariants-attr-name-table)
+    (with-temp-buffer
+      (insert-file-contents (expand-file-name "DailyUse" ivariants-directory))
+      (while
+          (re-search-forward "^\\([^#]\\)\t\\(.\\)\t\\(.\\)" nil t)
+        (let* ((japan (match-string 1))
+               (pr-china (match-string 2))
+               (taiwan (match-string 3)))
+          (when (and (not (equal japan "*")) (not (equal pr-china "*")))
+            (ivariants-add-charstr japan 'dailyuse/pr-china pr-china)
+            (ivariants-add-charstr pr-china 'dailyuse/japan japan))
+          (when (and (not (equal taiwan "*")) (not (equal pr-china "*")))
+            (ivariants-add-charstr pr-china 'dailyuse/taiwan taiwan)
+            (ivariants-add-charstr taiwan 'dailyuse/pr-china pr-china))
+          (when (and (not (equal japan "*")) (not (equal taiwan "*")))
+            (ivariants-add-charstr taiwan 'dailyuse/japan japan)
+            (ivariants-add-charstr japan 'dailyuse/taiwan taiwan))))
+      (goto-char (point-min))
+      ;; remove single, identical mapping
+      (while
+          (re-search-forward "^\\([^#]\\)\t\\(.\\)\t\\(.\\)" nil t)
+        (dolist (char
+                 (mapcar 'string-to-char
+                         (list (match-string 1) (match-string 2) (match-string 3))))
+          (let ((table (aref ivariants-char-table char)))
+            (dolist (attr '(dailyuse/japan dailyuse/pr-china dailyuse/taiwan))
+              (setq table
+                    (cl-remove-if
+                     (lambda (x) (and (equal attr (car x)) (equal char (cadr x))
+                                  (null (cddr x)))) table)))
+            (aset ivariants-char-table char table))))))
 
   (defun ivariants-compat-chars ()
     (puthash 'cjkvi/compatibility "互換漢字" ivariants-attr-name-table)
@@ -129,6 +167,7 @@
   ;; execute
   (ivariants-parse-files)
   (ivariants-parse-standardized-variants)
+  (ivariants-parse-dailyuse)
   (ivariants-compat-chars))
 
 (defvar ivariants-name-table
@@ -145,3 +184,5 @@
 ;; Local Variables:
 ;; time-stamp-pattern: "10/Version:\\\\?[ \t]+1.%02y%02m%02d\\\\?\n"
 ;; End:
+
+;;; ivariants-table.el ends here
