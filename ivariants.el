@@ -5,7 +5,7 @@
 ;; Author: KAWABATA, Taichi <kawabata.taichi_at_gmail.com>
 ;; Created: 2014-01-01
 ;; Package-Requires: ((emacs "24.3"))
-;; Version: 1.140329
+;; Version: 1.140330
 ;; Keywords: i18n languages
 ;; Namespace: ivariants-
 ;; Human-Keywords: Ideographic Variants
@@ -15,19 +15,20 @@
 
 ;; * ivariants.el … Ideographic Variants Editor and Browser
 ;;
-;; ivariants.el provides various Ideographic Variants editing tools.
-;; It provides various variation tables.
+;; `ivariants.el' and related files provide various Ideographic Variants
+;; editing and browsing capabilities.
 ;;
 ;; ** Inserting Variants
-;; `M-x ivariants-insert' inserts the variants of the cursor.
+;;
+;; `M-x ivariants-insert' inserts the variants at the current position.
 ;;
 ;; ** Browsing Variants
 ;;
-;; `M-x ivariants-browse' provides the tracing variants by tree widget.
+;; `M-x ivariants-browse' let you browse the variants.
 ;;
-;; ** Converting to Simplified/Traditional/Japanese forms.
+;; ** Converting to Simplified/Traditional/Taiwanese/Japanese forms.
 ;;
-;; Following commands for specified region are prepared.
+;; Following commands for specified region are provided.
 ;;
 ;; - ivariants-to-simplified
 ;; - ivariants-to-traditional
@@ -35,15 +36,18 @@
 ;; - ivariants-to-japan
 ;; - ivariants-to-taiwan
 ;;
-;; `M-x ivariants-browse' provides the tracing variants by tree widget.
+;; * Notes
 ;;
-;; * Variants data
+;; Sometimes, "traditional character" of RPC and Taiwanese character may
+;; differ. For example, "说"'s traditional character is "説" while
+;; Taiwanese character is "說".
 ;;
-;; Data are from Data are taken from https://github.com/cjkvi/cjkvi-variants and
-;; http://unicode.org/Public/UCD/latest/ucd/StandardizedVariants.txt
+;; * Variant Data
+;;
+;; Variant data are taken from https://github.com/cjkvi/cjkvi-variants
+;; and http://unicode.org/Public/UCD/latest/ucd/StandardizedVariants.txt.
 ;; 'DailyUse' is a modified version of data from
 ;; http://kanji.zinbun.kyoto-u.ac.jp/~yasuoka/CJK.html.
-
 
 ;;; Code:
 
