@@ -19,15 +19,31 @@
 ;; It provides various variation tables.
 ;;
 ;; ** Inserting Variants
-;; `M-x ivariants-insert' inserts the variants of ideograph at position.
+;; `M-x ivariants-insert' inserts the variants of the cursor.
 ;;
-;; ** ivariants-browse
+;; ** Browsing Variants
+;;
+;; `M-x ivariants-browse' provides the tracing variants by tree widget.
+;;
+;; ** Converting to Simplified/Traditional/Japanese forms.
+;;
+;; Following commands for specified region are prepared.
+;;
+;; - ivariants-to-simplified
+;; - ivariants-to-traditional
+;; - ivariants-to-pr-china
+;; - ivariants-to-japan
+;; - ivariants-to-taiwan
 ;;
 ;; `M-x ivariants-browse' provides the tracing variants by tree widget.
 ;;
 ;; * Variants data
+;;
 ;; Data are from http://github.com/cjkvi/variants and
 ;; http://unicode.org/Public/UCD/latest/ucd/StandardizedVariants.txt
+;; 'DailyUse' is a modified version of data from
+;; http://kanji.zinbun.kyoto-u.ac.jp/~yasuoka/CJK.html.
+
 
 ;;; Code:
 
@@ -36,10 +52,10 @@
 
 (defvar ivariants-order
   '(proper "ᴾ" traditional "ᵀ" simplified "ˢ" variant-simplified "ⱽ"
-    pseudo-simplified "Ⓟ" duplicate "ᴰ" compatibility "ᶜ"
+    pseudo-simplified "Ⓟ" japan "ⱼ" duplicate "ᴰ" compatibility "ᶜ"
     non-cognate "☠" variant "|" borrowed "ᵇ" kangxi "ᴷ" radical "ᴿ" \.)
   "Order to list in \\[ivariants-insert].
-String is a separator if previous kind of variants are displayed.
+String is an indicator/separator if previous kind of variants are displayed.
 \"\\.\" is a wildcard for the rest of all variants.")
 
 ;; calculation

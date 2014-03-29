@@ -16,7 +16,9 @@
 (require 'ivariants-table)
 
 (defun ivariants-to (from to &rest attributes)
-  "Convert region FROM TO to specified variants with ATTRIBUTES."
+  "Convert region FROM TO to specified variants with ATTRIBUTES.
+If variant with first attribute is first, then that replaces.
+If not, then second attribute will be searched, and so on."
   (save-excursion
     (save-restriction
       (narrow-to-region from to)
@@ -28,9 +30,9 @@
           (while attrs
             (let ((chars (assoc-default (car attrs) table)))
               (if (null chars) (setq attrs (cdr attrs))
-                (replace-match
-                 (if (= 1 (length chars)) (apply 'string chars)
-                   (concat "[" (apply 'string chars) "]")))
+                (let ((string (mapconcat (lambda (x) (if (characterp x) (string x) x)) chars "")))
+                  (replace-match
+                   (if (= 1 (length chars)) string (concat "[" string "]"))))
                 (setq attrs nil)))))))))
 
 ;;;###autoload
