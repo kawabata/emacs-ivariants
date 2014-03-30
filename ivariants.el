@@ -36,9 +36,16 @@
 ;; - ivariants-to-japan
 ;; - ivariants-to-taiwan
 ;;
+;; ** Configuration
+;;
+;; Typical configurations are:
+;;
+;; : (global-set-key (kbd "M-I")   'ivariants-insert)
+;; : (global-set-key (kbd "C-c i") 'ivariants-browse)
+;;
 ;; * Notes
 ;;
-;; Sometimes, "traditional character" of RPC and Taiwanese character may
+;; Sometimes, "traditional character" of P.R.C and Taiwanese character may
 ;; differ. For example, "说"'s traditional character is "説" while
 ;; Taiwanese character is "說".
 ;;
