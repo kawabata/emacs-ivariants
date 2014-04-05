@@ -5,7 +5,7 @@
 ;; Author: KAWABATA, Taichi <kawabata.taichi_at_gmail.com>
 ;; Created: 2014-01-01
 ;; Package-Requires: ((emacs "24.3") (ivs-edit "1.0"))
-;; Version: 1.140329
+;; Version: 1.140330
 ;; Keywords: i18n languages
 ;; Namespace: ivariants-browse-
 ;; Human-Keywords: Ideographic Variants
@@ -21,7 +21,6 @@
   "Return the list of tree as a child of WIDGET."
   (when (characterp (widget-get widget :char))
     (let* ((char      (widget-get widget :char))
-           (ancestors (cons char (widget-get widget :ancestors))) ;; ancestors
            (node-aj1  (ivariants-browse-ivs
                        char 'Adobe-Japan1))
            (node-hd   (ivariants-browse-ivs
@@ -37,18 +36,16 @@
         (let ((attribute (car item))
               (variants (cdr item)))
           (dolist (variant variants)
-            (when (not (memq variant ancestors))
-              (push
-               (list 'tree-widget
-                     :tag (format "%s %s"
-                                  (if (characterp variant) (char-to-string variant)
-                                    variant)
-                                  (or (gethash attribute ivariants-name-table)
-                                      (symbol-name attribute)))
-                     :char variant
-                     :open nil :ancestors (cl-union ancestors ivariants :test 'equal)
-                     :expander 'ivariants-browse-expander)
-               nodes)))))
+            (push
+             (list 'tree-widget
+                   :tag (format "%s %s"
+                                (if (characterp variant) (char-to-string variant)
+                                  variant)
+                                (or (gethash attribute ivariants-name-table)
+                                    (symbol-name attribute)))
+                   :char variant :open nil
+                   :expander 'ivariants-browse-expander)
+             nodes))))
       (nreverse nodes))))
 
 (defun ivariants-browse-ivs (char ivd)
@@ -85,7 +82,6 @@
   (widget-create 'tree-widget
                  :tag (format "%c (%04X)" char char)
                  :char char
-                 :ancestors nil
                  :open nil ; t
                  :expander 'ivariants-browse-expander
                  :has-children t)

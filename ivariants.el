@@ -4,8 +4,8 @@
 ;; Description: Ideographic Variants Editor
 ;; Author: KAWABATA, Taichi <kawabata.taichi_at_gmail.com>
 ;; Created: 2014-01-01
-;; Package-Requires: ((emacs "24.3"))
-;; Version: 1.140330
+;; Package-Requires: ((emacs "24.3") (ivs-edit "1.0"))
+;; Version: 1.140405
 ;; Keywords: i18n languages
 ;; Namespace: ivariants-
 ;; Human-Keywords: Ideographic Variants
@@ -63,8 +63,8 @@
 
 (defvar ivariants-order
   '(proper "ᴾ" traditional "ᵀ" simplified "ˢ" variant-simplified "ⱽ"
-    pseudo-simplified "Ⓟ" japan "ⱼ" duplicate "ᴰ" compatibility "ᶜ"
-    non-cognate "☠" variant "|" borrowed "ᵇ" kangxi "ᴷ" radical "ᴿ" \.)
+    japan "ⱼ" taiwan "ₜ" duplicate "ᴰ" compatibility "ᶜ" pseudo-simplified "ₚ"
+    variant "|" non-cognate "☠" borrowed "ᵇ" kangxi "ᴷ" radical "ᴿ" \.)
   "Order to list in \\[ivariants-insert].
 String is an indicator/separator if previous kind of variants are displayed.
 \"\\.\" is a wildcard for the rest of all variants.")
