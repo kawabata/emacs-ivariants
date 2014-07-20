@@ -1,11 +1,11 @@
-;;; ivariants.el --- Ideographic Variants Editor and Browser-*- lexical-binding: t -*-
+;;; ivariants.el --- Ideographic variants editor and browser -*- lexical-binding: t -*-
 
 ;; Filename: ivariants.el
 ;; Description: Ideographic Variants Editor
 ;; Author: KAWABATA, Taichi <kawabata.taichi_at_gmail.com>
 ;; Created: 2014-01-01
 ;; Package-Requires: ((emacs "24.3") (ivs-edit "1.0"))
-;; Version: 1.140405
+;; Version: 1.140406
 ;; Keywords: i18n languages
 ;; Namespace: ivariants-
 ;; Human-Keywords: Ideographic Variants

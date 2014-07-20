@@ -5,7 +5,7 @@
 ;; Author: KAWABATA, Taichi <kawabata.taichi_at_gmail.com>
 ;; Created: 2013-03-25
 ;; Package-Requires: ((emacs "24.3"))
-;; Version: 1.140329
+;; Version: 1.140720
 ;; Keywords: i18n languages
 ;; Namespace: ivariants-
 ;; Human-Keywords: Ideographic Variants
@@ -49,6 +49,7 @@
       "non-cjk.txt"
       "non-cognates.txt"
       "numeric-variants.txt"
+      "radical-variants.txt"
       "ucs-scs.txt"
       ))
 
@@ -69,6 +70,7 @@
           (setq alist (cons (list prop val) alist))
           (aset ivariants-char-table char alist)))))
 
+  (require 'bytecomp)
   (defvar ivariants-directory
     (expand-file-name
      "tables"
