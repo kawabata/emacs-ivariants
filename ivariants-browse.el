@@ -5,7 +5,7 @@
 ;; Author: KAWABATA, Taichi <kawabata.taichi_at_gmail.com>
 ;; Created: 2014-01-01
 ;; Package-Requires: ((emacs "24.3") (ivs-edit "1.0"))
-;; Version: 1.140330
+;; Version: 1.140721
 ;; Keywords: i18n languages
 ;; Namespace: ivariants-browse-
 ;; Human-Keywords: Ideographic Variants
@@ -15,6 +15,8 @@
 
 (require 'ivariants-table)
 (require 'ivs-edit)
+(require 'tree-widget)
+(require 'wid-edit)
 (require 'cl-lib)
 
 (defun ivariants-browse-expander (widget)
